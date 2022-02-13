@@ -48,14 +48,16 @@ class myQuery2(graphene.ObjectType):
 
 class SchoolMutation(graphene.Mutation):
     class Arguments:
+        id = graphene.ID()
         school_name =  graphene.String(required=True)
     
     school = graphene.Field(SchoolGraph)
     @classmethod
-    def mutate(cls, root, info, school_name):
-        school = School(school_name=school_name)
-        school.save()
-        return SchoolMutation(school=school)
+    def mutate(cls, root, info, school_name, id):
+        school_data = School.objects.get(id=id)
+        school_data.school_name = school_name
+        school_data.save()
+        return SchoolMutation(school=school_data)
 
 class Mutation(graphene.ObjectType):
     
